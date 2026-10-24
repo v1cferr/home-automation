@@ -70,11 +70,20 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
 
 ### Wi-Fi lamp
 
-- **Evidence**: no mDNS service, no SSDP response, and no neighbor-table entry matching a
-  Home Assistant DHCP matcher.
-- **Likely reasons**: many Wi-Fi bulbs (Tuya/Smart Life and similar) announce nothing over
-  mDNS or SSDP; others answer only to integration-specific broadcasts.
-- **Status**: *not found*. Needs the brand and model, or the vendor app's name.
+- **Evidence**: no mDNS service and no SSDP response. The router's DHCP leases list one
+  client whose MAC prefix the IEEE registry assigns to *Tuya Smart Inc.*, with the generic
+  hostname `wlan0` typical of Tuya Wi-Fi modules. The shower was offline at the time, so
+  this is most likely the lamp, but nothing on the network names the product.
+- **Home Assistant discovery**: none. The installed version has no DHCP matcher for that
+  MAC prefix, and Tuya devices announce nothing over mDNS or SSDP.
+- **Integration path**: the core [Tuya](https://www.home-assistant.io/integrations/tuya/)
+  integration, which links the Smart Life / Tuya Smart app account by QR code (cloud).
+- **Status**: *candidate*. Confirm in the vendor app which device it is.
+
+### Host's own media server
+
+The UI lists a *DLNA Digital Media Server* under *Discovered*: that is the development
+host's Jellyfin answering SSDP, not a home device. Ignore it.
 
 ### Smart electric shower
 

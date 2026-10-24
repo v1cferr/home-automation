@@ -46,3 +46,6 @@ the database cleanly.
 Never commit private addresses, MAC addresses, SSIDs, device identifiers, tokens or
 passwords. Diagnostics go to `local/`, and secrets stay in `homeassistant/secrets.yaml`
 (ignored).
+
+The admin API token is not in this repository either: on the development host it comes from
+the host's sops vault at `/run/secrets/home_assistant_token` (readable by the user only).

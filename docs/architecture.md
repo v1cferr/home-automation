@@ -56,6 +56,29 @@ on purpose:
 `default_config:` in it: it loads `zeroconf`, `ssdp`, `dhcp` and the rest of the discovery
 stack.
 
+### Reverse proxy
+
+Remote access goes through the host's Caddy, which already serves a wildcard certificate for
+the personal domain and answers `home.<domain>` by proxying to `127.0.0.1:8123`. Caddy only
+admits the LAN and the router's WireGuard subnet and returns 403 to everyone else, so a phone
+reaches Home Assistant through the VPN and the internet does not reach it at all. That entry
+lives in the host's NixOS configuration, not in this repository.
+
+Home Assistant must trust the proxy, or it answers 400 to forwarded requests. Since 2026.10
+the HTTP settings are **not** read from `configuration.yaml`: they are migrated once into
+`.storage/http` and managed from the UI or the `http/config/configure` WebSocket command,
+which stages a *pending* config, restarts, and reverts to the *stable* one after a few minutes
+unless it is promoted. A leftover `http:` block in YAML only raises a repair issue. The values
+in use:
+
+```yaml
+use_x_forwarded_for: true
+trusted_proxies: [127.0.0.1, ::1]
+```
+
+They travel with `.storage`, so a migration keeps them; re-check them if the proxy moves to
+a different host.
+
 ### Restart and shutdown
 
 `restart: unless-stopped` brings Home Assistant back after a crash or a host reboot, but not
@@ -67,11 +90,10 @@ not needed.
 
 ## Security
 
-- Not exposed to the internet: no port forwarding, no reverse proxy, no Nabu Casa remote
-  access configured.
-- With host networking, LAN access to 8123 depends on the host firewall. On the current
-  development host the firewall does not allow 8123, so the UI is reachable from the host
-  only. Opening it to the LAN is a separate, explicit firewall change.
+- Not exposed to the internet: no port forwarding and no Nabu Casa remote access. The
+  reverse proxy admits only the LAN and the WireGuard subnet.
+- With host networking, direct access to 8123 depends on the host firewall. On the current
+  development host 8123 stays closed, so other devices go through the proxy on 443.
 - The container runs as root (the image requires it), so files under `homeassistant/` are
   owned by root on the host.
 - Discovery listeners (5353/udp, 1900/udp) must be allowed by the host firewall for

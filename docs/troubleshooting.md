@@ -28,14 +28,16 @@ and add `cap_add: [NET_ADMIN]`, which is still far narrower than `privileged: tr
 
 ## The UI is not reachable from another device
 
-With `network_mode: host` there is no port mapping, so the host firewall decides. On NixOS:
+Other devices use `https://home.<domain>` through the host's reverse proxy, from the LAN or
+the WireGuard VPN (see [architecture.md](architecture.md#reverse-proxy)). Check in order:
 
-```sh
-sudo iptables -S nixos-fw | grep 8123   # no output: 8123 is closed to the LAN
-```
+1. The name resolves to the host (the router's DNS answers the wildcard locally).
+2. Caddy answers: a 403 means the client is neither on the LAN nor on the VPN.
+3. A 400 from Home Assistant means it does not trust the proxy. The HTTP settings live in
+   `.storage/http`, not in YAML; fix them in the UI or with `http/config/configure`.
 
-Opening it is a declarative change in the host configuration, ideally restricted to the
-LAN subnet. Never forward 8123 on the router.
+With `network_mode: host` there is no port mapping, so direct access to 8123 is decided by
+the host firewall, where it stays closed. Never forward 8123 on the router.
 
 ## A device does not show up
 

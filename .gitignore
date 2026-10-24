@@ -1,0 +1,10 @@
+# Home Assistant state: the whole config directory is private by default (.storage holds
+# credentials and device identifiers, the database holds history). Only files reviewed for
+# secrets are allowlisted back in.
+/homeassistant/*
+!/homeassistant/configuration.yaml
+
+# Local, untracked notes from network diagnostics (IPs, MACs, hostnames).
+/local/
+
+.env

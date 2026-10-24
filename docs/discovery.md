@@ -66,7 +66,14 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
   (present in the installed version). It is cloud-based and needs the Amazon account
   credentials and a one-time code, entered in the UI by the account owner. Never store them
   in this repository.
-- **Status**: *requires authentication*.
+- **Known bug (2026.10.x)**: the setup spinner never ends and the log shows
+  `InvalidUrlClientError: /ax/claim?...`. Amazon now routes some sign-ins through a passkey
+  page with a relative form action that `aioamazondevices` 16.3.2 cannot follow, so the
+  credentials are never even submitted
+  ([core#187595](https://github.com/home-assistant/core/issues/187595)). The bump to 16.9.1
+  ([core#187985](https://github.com/home-assistant/core/pull/187985)) was merged into `dev`
+  on 2026-10-22 without a backport, so it ships with 2026.11. Retry after updating the image.
+- **Status**: *requires authentication*, blocked by the bug above.
 
 ### Wi-Fi lamp
 

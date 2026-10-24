@@ -1,0 +1,21 @@
+# Home Assistant Container. Discovery-first bootstrap: no add-on services yet.
+# Rationale for every choice below: docs/architecture.md
+name: home-automation
+
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: homeassistant
+    # Host networking: zeroconf (mDNS), SSDP and DHCP discovery rely on multicast and
+    # broadcast on the LAN, which a bridge network does not forward.
+    network_mode: host
+    environment:
+      TZ: America/Sao_Paulo
+    volumes:
+      # Everything Home Assistant persists (config, .storage, database, logs, backups).
+      # Git tracks only the allowlisted files; see .gitignore.
+      - ./homeassistant:/config
+    restart: unless-stopped
+    # Give the recorder time to flush and close the SQLite database on `docker compose down`.
+    stop_grace_period: 2m
+    # Not privileged, and no D-Bus or /dev mounts: Bluetooth and USB radios are out of scope.

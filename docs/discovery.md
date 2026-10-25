@@ -103,6 +103,15 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
   | Build | `eng`, `test-keys`, root available to any app | Allwinner reference board firmware (`dolphin_fvd_p1`, board `exdroid`) |
 
   Google Play sign-in fails ("something went wrong"): the device is not Google-certified.
+
+  Over ADB as root, the block devices settle the storage question: the eMMC (`mmcblk0`,
+  type `MMC`, name `008G70`) holds 8 GB, and the microSD slot is `mmcblk1` (type `SD`). The
+  RAM figure cannot be read from the system: even `/proc/meminfo` reports 8 GB, so the kernel
+  itself was patched to lie.
+- **Access**: the Developer options only offer USB debugging, but `su` works from a terminal
+  app (Termux), and `setprop service.adb.tcp.port 5555` followed by restarting `adbd`
+  enables network ADB as root, with no key authorization prompt (an `eng` build). A reboot
+  turns it off again.
 - **Home Assistant discovery**: none expected. The core
   [Android TV Remote](https://www.home-assistant.io/integrations/androidtv_remote/)
   integration matches `_androidtvremote2._tcp`, not the older name this box announces, but
@@ -118,7 +127,11 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
   for the iComm Wi-Fi chip (use Ethernet or a USB Wi-Fi adapter with a mainline driver). Once
   running, the core [Kodi](https://www.home-assistant.io/integrations/kodi/) integration
   controls it locally.
-- **Status**: *candidate*, waiting for a microSD card.
+  With no microSD reader on the host, the box wrote the card itself: the image went over on
+  a USB stick and `dd` ran on the box against `mmcblk1`, checked by type and name first,
+  then verified against the image's checksum.
+- **Status**: *candidate*. LibreELEC 12.2.1 (`beelink-x2`) is on the microSD, not yet
+  booted.
 
 ### Host's own media server
 

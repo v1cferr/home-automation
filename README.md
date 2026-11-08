@@ -24,13 +24,13 @@ the database cleanly.
 
 ## Layout
 
-| Path | What | In Git |
-| --- | --- | --- |
-| `compose.yaml` | The single Home Assistant service | yes |
-| `homeassistant/` | The container's `/config`: all persistent state | only `configuration.yaml` |
-| `scripts/discovery-snapshot.sh` | Non-invasive LAN discovery snapshot | yes |
-| `local/` | Private diagnostics (addresses, MACs, hostnames) | no |
-| `docs/` | Architecture, discovery method, troubleshooting | yes |
+| Path                            | What                                             | In Git                    |
+| ------------------------------- | ------------------------------------------------ | ------------------------- |
+| `compose.yaml`                  | The single Home Assistant service                | yes                       |
+| `homeassistant/`                | The container's `/config`: all persistent state  | only `configuration.yaml` |
+| `scripts/discovery-snapshot.sh` | Non-invasive LAN discovery snapshot              | yes                       |
+| `local/`                        | Private diagnostics (addresses, MACs, hostnames) | no                        |
+| `docs/`                         | Architecture, discovery method, troubleshooting  | yes                       |
 
 ## Documentation
 

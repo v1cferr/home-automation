@@ -43,14 +43,14 @@ The container's `/config` is bind-mounted from `./homeassistant`. The directory 
 as a whole and only reviewed files are allowlisted back (`configuration.yaml` today). Ignored
 on purpose:
 
-| Path | Why |
-| --- | --- |
-| `.storage/` | UI-managed config: auth, users, config entries, device and entity registries |
-| `home-assistant_v2.db*` | Recorder history (SQLite + WAL) |
-| `secrets.yaml` | Secrets referenced with `!secret` |
-| `*.log*` | Logs contain addresses and identifiers |
-| `backups/`, `deps/`, `tts/`, `.cloud/` | Generated or private |
-| `automations.yaml`, `scripts.yaml`, `scenes.yaml` | UI-edited; they embed device IDs. Revisit when automations exist |
+| Path                                              | Why                                                                          |
+| ------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `.storage/`                                       | UI-managed config: auth, users, config entries, device and entity registries |
+| `home-assistant_v2.db*`                           | Recorder history (SQLite + WAL)                                              |
+| `secrets.yaml`                                    | Secrets referenced with `!secret`                                            |
+| `*.log*`                                          | Logs contain addresses and identifiers                                       |
+| `backups/`, `deps/`, `tts/`, `.cloud/`            | Generated or private                                                         |
+| `automations.yaml`, `scripts.yaml`, `scenes.yaml` | UI-edited; they embed device IDs. Revisit when automations exist             |
 
 `configuration.yaml` is the file Home Assistant generated on first start, unchanged. Keep
 `default_config:` in it: it loads `zeroconf`, `ssdp`, `dhcp` and the rest of the discovery

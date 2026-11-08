@@ -5,11 +5,11 @@ category. Addresses and identifiers are intentionally absent: raw evidence lives
 
 ## Three stages, three different claims
 
-| Stage | What it proves | Where to see it |
-| --- | --- | --- |
-| **Service announced** | Something on the LAN advertises a protocol (mDNS, SSDP, DHCP) | `avahi-browse`, `scripts/discovery-snapshot.sh`, the Zeroconf/SSDP browsers in the UI |
-| **Integration discovered** | A Home Assistant integration's matcher fired and created a discovery flow | Settings > Devices & services > *Discovered* |
-| **Integration configured** | A config entry exists and entities work | Settings > Devices & services > *Configured* |
+| Stage                      | What it proves                                                            | Where to see it                                                                       |
+| -------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **Service announced**      | Something on the LAN advertises a protocol (mDNS, SSDP, DHCP)             | `avahi-browse`, `scripts/discovery-snapshot.sh`, the Zeroconf/SSDP browsers in the UI |
+| **Integration discovered** | A Home Assistant integration's matcher fired and created a discovery flow | Settings > Devices & services > *Discovered*                                          |
+| **Integration configured** | A config entry exists and entities work                                   | Settings > Devices & services > *Configured*                                          |
 
 A device in stage 1 is not necessarily supported. A device in stage 2 may still need cloud
 credentials. Only stage 3 counts as "integrated".
@@ -94,13 +94,13 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
   The MAC prefix belongs to *Shenzhen iComm Semiconductor*, a maker of cheap Wi-Fi chips.
   CPU-Z on the box itself reports:
 
-  | Field | Reported | Assessment |
-  | --- | --- | --- |
-  | SoC | Allwinner H3, hardware `sun8iw7p1` | Real: the kernel's hardware ID matches. Quad Cortex-A7 (32-bit), Mali-400 |
-  | Android | "11.1" | Fake: API level 24 and build `NRD91N` are Android 7.0 |
-  | Security patch | 2016-11-05 | Real, and never updated |
-  | RAM / storage | 8 GB / 128 GB | Fake: free space reads 653 MB (7%) and 3.28 GB (2%); likely 1 GB / 8 GB |
-  | Build | `eng`, `test-keys`, root available to any app | Allwinner reference board firmware (`dolphin_fvd_p1`, board `exdroid`) |
+  | Field          | Reported                                      | Assessment                                                                |
+  | -------------- | --------------------------------------------- | ------------------------------------------------------------------------- |
+  | SoC            | Allwinner H3, hardware `sun8iw7p1`            | Real: the kernel's hardware ID matches. Quad Cortex-A7 (32-bit), Mali-400 |
+  | Android        | "11.1"                                        | Fake: API level 24 and build `NRD91N` are Android 7.0                     |
+  | Security patch | 2016-11-05                                    | Real, and never updated                                                   |
+  | RAM / storage  | 8 GB / 128 GB                                 | Fake: free space reads 653 MB (7%) and 3.28 GB (2%); likely 1 GB / 8 GB   |
+  | Build          | `eng`, `test-keys`, root available to any app | Allwinner reference board firmware (`dolphin_fvd_p1`, board `exdroid`)    |
 
   Google Play sign-in fails ("something went wrong"): the device is not Google-certified.
 
@@ -153,9 +153,9 @@ path that handles credentials, and compatibility with the installed version).
 
 Common paths once the vendor app is known:
 
-| Vendor app | Core integration | Control |
-| --- | --- | --- |
-| Smart Life / Tuya Smart | [Tuya](https://www.home-assistant.io/integrations/tuya/) | Cloud |
-| Matter-certified device | [Matter](https://www.home-assistant.io/integrations/matter/) (needs Matter Server) | Local |
-| Tasmota / ESPHome firmware | Tasmota (needs MQTT) / ESPHome | Local |
-| Amazon Alexa app | [Alexa Devices](https://www.home-assistant.io/integrations/alexa_devices/) | Cloud |
+| Vendor app                 | Core integration                                                                   | Control |
+| -------------------------- | ---------------------------------------------------------------------------------- | ------- |
+| Smart Life / Tuya Smart    | [Tuya](https://www.home-assistant.io/integrations/tuya/)                           | Cloud   |
+| Matter-certified device    | [Matter](https://www.home-assistant.io/integrations/matter/) (needs Matter Server) | Local   |
+| Tasmota / ESPHome firmware | Tasmota (needs MQTT) / ESPHome                                                     | Local   |
+| Amazon Alexa app           | [Alexa Devices](https://www.home-assistant.io/integrations/alexa_devices/)         | Cloud   |

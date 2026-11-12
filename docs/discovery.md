@@ -162,10 +162,14 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
   The first is the one to start with, because its whole code path was read and it never
   writes: it only fetches the shower list and the month's measurements, so it reports each
   shower after the fact rather than live. It needs `httpx`, which the installed version
-  already ships. HACS is not deployed here, so it would be copied into `custom_components/`
-  at a pinned commit. The second was only skimmed: it has a write path to the appliance and
-  optional database credentials, and needs a full read before it is considered.
-- **Status**: *requires authentication*. Nothing is installed yet.
+  already ships. HACS is not deployed here, so `scripts/install-zagonel.sh` fetches it at
+  the reviewed commit into `custom_components/`, which stays out of this repository because
+  upstream has no license. The second was only skimmed: it has a write path to the
+  appliance and optional database credentials, and needs a full read before it is
+  considered.
+- **Status**: *requires authentication*. The integration is installed and loaded; the
+  account owner still has to add it under Settings > Devices & services > *Add integration*
+  > *Zagonel Smart Shower* with the Smart Banho credentials.
 - **Safety**: a high-power heating appliance. No command of any kind is sent to it during
   discovery, and any future integration starts read-only.
 

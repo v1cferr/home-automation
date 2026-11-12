@@ -79,8 +79,9 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
 
 - **Evidence**: no mDNS service and no SSDP response. The router's DHCP leases list one
   client whose MAC prefix the IEEE registry assigns to *Tuya Smart Inc.*, with the generic
-  hostname `wlan0` typical of Tuya Wi-Fi modules. The shower was offline at the time, so
-  this is most likely the lamp, but nothing on the network names the product.
+  hostname `wlan0` typical of Tuya Wi-Fi modules. The shower has since shown up as a
+  separate client, so this is most likely the lamp, but nothing on the network names the
+  product.
 - **Home Assistant discovery**: none. The installed version has no DHCP matcher for that
   MAC prefix, and Tuya devices announce nothing over mDNS or SSDP.
 - **Integration path**: the core [Tuya](https://www.home-assistant.io/integrations/tuya/)
@@ -140,8 +141,31 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
 
 ### Smart electric shower
 
-- **Evidence**: same as the lamp: nothing announced.
-- **Status**: *not found*. Needs the brand and model, or the vendor app's name.
+- **Evidence**: no mDNS service and no SSDP response, like the lamp. Once it joined the
+  2.4 GHz network, the router's DHCP leases showed a client with the hostname `Zagonel` and
+  a MAC prefix the IEEE registry assigns to *Espressif Inc.*, and the owner confirmed the
+  brand. That matches the Zagonel Ducali, whose ESP32 module (Wi-Fi 2.4 GHz only, plus BLE)
+  Anatel approved in 2022. The vendor app is *Smart Banho*. The router now reserves its
+  address.
+- **Home Assistant discovery**: none. The installed version has no DHCP matcher for that
+  hostname or MAC prefix, there is no core integration, and no local API is documented.
+- **Integration path**: community only, and cloud only. All three candidates sign in to
+  Zagonel's cloud with the app account's email and password, which Home Assistant keeps in
+  its config entry. Reviewed on 2026-11-12 against the criteria below:
+
+  | Repository                                         | Activity                                      | Behavior                                                                  |
+  | -------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------- |
+  | `alexandrepossebom/zagonel-ha`                     | 6 commits, last 2026-09, no license           | Sensors only: one login, then `GET` requests every 10 minutes             |
+  | `cleberdevsoares/homeassistant-zagonel-smartbanho` | 7 commits, created 2026-10, MIT               | Live state and controls over cloud MQTT; publishes to it every 15 s       |
+  | `humbertogontijo/homeassistant-zagonel`            | Idle since 2023-10                            | Rejected: targets a server reported as shut down, open connection issues  |
+
+  The first is the one to start with, because its whole code path was read and it never
+  writes: it only fetches the shower list and the month's measurements, so it reports each
+  shower after the fact rather than live. It needs `httpx`, which the installed version
+  already ships. HACS is not deployed here, so it would be copied into `custom_components/`
+  at a pinned commit. The second was only skimmed: it has a write path to the appliance and
+  optional database credentials, and needs a full read before it is considered.
+- **Status**: *requires authentication*. Nothing is installed yet.
 - **Safety**: a high-power heating appliance. No command of any kind is sent to it during
   discovery, and any future integration starts read-only.
 
@@ -159,3 +183,4 @@ Common paths once the vendor app is known:
 | Matter-certified device    | [Matter](https://www.home-assistant.io/integrations/matter/) (needs Matter Server) | Local   |
 | Tasmota / ESPHome firmware | Tasmota (needs MQTT) / ESPHome                                                     | Local   |
 | Amazon Alexa app           | [Alexa Devices](https://www.home-assistant.io/integrations/alexa_devices/)         | Cloud   |
+| Smart Banho (Zagonel)      | None in core; community only (see the shower above)                                | Cloud   |

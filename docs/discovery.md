@@ -167,9 +167,12 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
   upstream has no license. The second was only skimmed: it has a write path to the
   appliance and optional database credentials, and needs a full read before it is
   considered.
-- **Status**: *requires authentication*. The integration is installed and loaded; the
-  account owner still has to add it under Settings > Devices & services > *Add integration*
-  > *Zagonel Smart Shower* with the Smart Banho credentials.
+- **Account**: the integration only signs in with an email and password. An app account
+  created through Google sign-in has no password and is refused as invalid credentials
+  until one is set in the app; the shower stays registered to the same account.
+- **Status**: *integrated* (read-only) since 2026-11-12. The config entry was created
+  through the REST config flow API, and the shower's 13 sensors (last shower and monthly
+  totals) report data.
 - **Safety**: a high-power heating appliance. No command of any kind is sent to it during
   discovery, and any future integration starts read-only.
 

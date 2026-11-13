@@ -86,7 +86,8 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
   MAC prefix, and Tuya devices announce nothing over mDNS or SSDP.
 - **Integration path**: the core [Tuya](https://www.home-assistant.io/integrations/tuya/)
   integration, which links the Smart Life / Tuya Smart app account by QR code (cloud).
-- **Status**: *candidate*. Confirm in the vendor app which device it is.
+- **Status**: *candidate*. Confirm in the vendor app which device it is. On 2026-11-13 it
+  was no longer on the network: no lease, and its last address did not answer.
 
 ### Generic Android TV box
 
@@ -133,6 +134,18 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
   then verified against the image's checksum.
 - **Status**: *candidate*. LibreELEC 12.2.1 (`beelink-x2`) is on the microSD, not yet
   booted.
+
+### Samsung TV (living room)
+
+- **Evidence**: the router reserves an address for a client named `TV-Samsung-Sala`, whose MAC
+  prefix the IEEE registry assigns to *Samsung Electronics*. On 2026-11-13 it was off: it
+  held no lease and did not answer, so nothing on the network could be checked.
+- **Home Assistant discovery**: expected once it is on. Samsung TVs announce themselves over
+  SSDP, which the core [Samsung Smart TV](https://www.home-assistant.io/integrations/samsungtv/)
+  integration matches; the TV then asks on screen to allow the connection.
+- **Integration path**: that core integration, local. Turning the TV on over the network
+  needs Wake-on-LAN or SmartThings, since a TV in standby drops off Wi-Fi.
+- **Status**: *not found* (powered off). Turn it on and check *Discovered*.
 
 ### Host's own media server
 

@@ -73,7 +73,9 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
   ([core#187595](https://github.com/home-assistant/core/issues/187595)). The bump to 16.9.1
   ([core#187985](https://github.com/home-assistant/core/pull/187985)) was merged into `dev`
   on 2026-10-22 without a backport, so it ships with 2026.11. Retry after updating the image.
-- **Status**: *requires authentication*, blocked by the bug above.
+  Updated on 2026-11-13: 2026.11.1 ships `aioamazondevices` 17.2.7.
+- **Status**: *requires authentication*. The bug above is fixed in the installed version; the
+  owner's sign-in is what remains.
 
 ### Wi-Fi lamp
 
@@ -157,7 +159,8 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
 ### Host's own media server
 
 The UI lists a *DLNA Digital Media Server* under *Discovered*: that is the development
-host's Jellyfin answering SSDP, not a home device. Ignore it.
+host's Jellyfin answering SSDP, not a home device. It had been configured by mistake; on
+2026-11-13 the entry was deleted and the rediscovery marked *Ignored*, so it stays hidden.
 
 ### Smart electric shower
 

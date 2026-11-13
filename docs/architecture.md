@@ -37,6 +37,15 @@ Consequence: the Bluetooth integration (part of `default_config:`) finds the hos
 over netlink but cannot manage it without D-Bus and `NET_ADMIN`, and logs errors. See
 [troubleshooting.md](troubleshooting.md#bluetooth-errors-at-startup).
 
+### Updates
+
+The compose pins `:stable`, and the host pulls it every day at 05:00 and recreates the
+container only when the image changed. That timer is declared in the host's NixOS
+configuration (dotfiles, `modules/nixos/services/home-assistant.nix`), not here, for the same
+reason as the reverse proxy below. The owner chose always-latest on 2026-11-13, knowing that
+monthly releases can carry breaking changes; going back one release means pinning the
+previous tag in `compose.yaml`.
+
 ### Configuration vs. state
 
 The container's `/config` is bind-mounted from `./homeassistant`. The directory is git-ignored

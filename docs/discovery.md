@@ -84,10 +84,17 @@ Findings from the first run (Home Assistant 2026.10). Status vocabulary: *integr
   product.
 - **Home Assistant discovery**: none. The installed version has no DHCP matcher for that
   MAC prefix, and Tuya devices announce nothing over mDNS or SSDP.
-- **Integration path**: the core [Tuya](https://www.home-assistant.io/integrations/tuya/)
-  integration, which links the Smart Life / Tuya Smart app account by QR code (cloud).
-- **Status**: *candidate*. Confirm in the vendor app which device it is. On 2026-11-13 it
-  was no longer on the network: no lease, and its last address did not answer.
+- **Vendor app**: *Positivo Casa Inteligente* (`com.positivo.casainteligente`), confirmed by
+  the owner on 2026-11-13. Positivo's devices are Tuya modules on Tuya's cloud under
+  Positivo's own app keys, so the core Tuya integration cannot see an account from that app.
+- **Integration path**: re-pair the lamp in the *Smart Life* app (remove it from Positivo's
+  app first; a Tuya module joins either app), then add the core
+  [Tuya](https://www.home-assistant.io/integrations/tuya/) integration, which links the Smart
+  Life account by QR code (cloud). The only Positivo-specific integration,
+  `rgsilva/homeassistant-positivo`, was rejected: archived since 2022-11, no bulb support,
+  and it signs in with keys extracted from Positivo's app.
+- **Status**: *candidate*. On 2026-11-13 it was no longer on the network: no lease, and its
+  last address did not answer.
 
 ### Generic Android TV box
 

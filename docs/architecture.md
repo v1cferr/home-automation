@@ -98,6 +98,15 @@ trusted_proxies: [127.0.0.1, ::1]
 They travel with `.storage`, so a migration keeps them; re-check them if the proxy moves to
 a different host.
 
+Home Assistant must also **advertise** the proxy's address. Left unset, its internal and
+external URLs default to `http://<host IP>:8123`, which is what it announces over mDNS
+(`_home-assistant._tcp`) and what the Companion app picks up when it finds the server on the
+LAN. The firewall keeps 8123 closed to other machines, so the app timed out without a single
+request reaching Caddy. Both URLs are set to `https://home.<domain>` (Settings > System >
+Network, or `config/core/update` over WebSocket; stored in `.storage/core.config`), and the
+mDNS record carries the new value after a restart. The phone uses the same name on the LAN
+and through WireGuard, since the router answers `*.<domain>` with the host's LAN address.
+
 ### Restart and shutdown
 
 `restart: unless-stopped` brings Home Assistant back after a crash or a host reboot, but not

@@ -4,6 +4,8 @@
 #
 # The integration polls the vendor cloud every 10 minutes and only reports a shower after it
 # ends, so every alert fires after the fact, never during the shower.
+#
+# Notifications go to the UI's panel and to the owner's phone (Companion app).
 
 input_number:
   # No `initial`: with one, every restart would overwrite the value set in the UI. The
@@ -51,14 +53,23 @@ automation:
           max_cost: "{{ states('input_number.shower_alert_cost') | float(2) }}"
       - condition: template
         value_template: "{{ minutes > max_minutes or cost > max_cost }}"
-      - action: notify.persistent_notification
-        data:
+      - variables:
           title: Long shower
           message: >-
             The last shower took {{ minutes }} min and cost BRL {{ '%.2f' | format(cost) }}
             ({{ states('sensor.ducali_0_last_shower_water') }} L,
             {{ states('sensor.ducali_0_last_shower_energy') }} kWh).
             Limits: {{ max_minutes | int }} min, BRL {{ '%.2f' | format(max_cost) }}.
+      - action: notify.persistent_notification
+        data:
+          title: "{{ title }}"
+          message: "{{ message }}"
+      - action: notify.mobile_app_motorola_edge_70_fusion
+        # The phone may be offline; the panel notification above already went out.
+        continue_on_error: true
+        data:
+          title: "{{ title }}"
+          message: "{{ message }}"
 
   - id: shower_monthly_summary
     alias: Shower monthly summary
@@ -72,11 +83,20 @@ automation:
       - condition: template
         value_template: "{{ (now() + timedelta(days=1)).day == 1 }}"
     actions:
-      - action: notify.persistent_notification
-        data:
+      - variables:
           title: "Shower summary: {{ now().strftime('%B %Y') }}"
           message: >-
             {{ states('sensor.ducali_0_showers_this_month') }} showers,
             {{ states('sensor.ducali_0_monthly_water_usage') }} L of water,
             {{ states('sensor.ducali_0_monthly_energy_usage') | float(0) | round(1) }} kWh,
             BRL {{ '%.2f' | format(states('sensor.ducali_0_monthly_cost') | float(0)) }}.
+      - action: notify.persistent_notification
+        data:
+          title: "{{ title }}"
+          message: "{{ message }}"
+      - action: notify.mobile_app_motorola_edge_70_fusion
+        # The phone may be offline; the panel notification above already went out.
+        continue_on_error: true
+        data:
+          title: "{{ title }}"
+          message: "{{ message }}"

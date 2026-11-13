@@ -197,7 +197,7 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
   the owner's account is preferred, so the appliance is not registered through credentials
   that strangers also use. Once set up, the cloud is not needed for day-to-day control.
   No community integration is needed, so none was reviewed.
-- **Status**: *candidate*.
+- **Status**: *candidate*. The router reserves its address.
 
 ## Choosing an integration
 

@@ -195,10 +195,19 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
   `midea-local`), which lists `0xFA` fans with power, speed, oscillation and mode entities.
   Control is **local polling** over port 6444, but a V3 device only accepts a session after
   a token and key are fetched from Midea's cloud once, during setup. The config flow offers
-  either the owner's own app account or a shared preset account that `midea-local` ships;
-  the owner's account is preferred, so the appliance is not registered through credentials
-  that strangers also use. Once set up, the cloud is not needed for day-to-day control.
-  No community integration is needed, so none was reviewed.
+  either a shared preset account that `midea-local` ships (on the NetHome Plus server) or
+  the owner's own app account, whose email and password then stay in the config entry.
+  Once set up, the cloud is not needed for day-to-day control. No community integration is
+  needed, so none was reviewed.
+- **First attempt (2026-11-13)**: the preset account signs in, but every `getToken` call
+  answers `9999 system error`, so the flow ends in `token_unavailable`. Upstream reports the
+  same for Brazilian appliances, where the token only comes from the SmartHome server
+  ([midea-local#865](https://github.com/midea-lan/midea-local/issues/865)). The same issue
+  ties appliances that refuse LAN login, even from Midea's own app, to bit `0x04` of byte 57
+  of the decrypted discovery reply being clear; on this fan that byte is `0x0d`, so the bit
+  is set, as on the appliances that work. Next: the owner's SmartHome account, entered in
+  the UI with the *MSmartHome* server selected. An account created through Google sign-in
+  needs a password set in the app first, as with the shower.
 - **Status**: *candidate*. The router reserves its address.
 
 ## Choosing an integration

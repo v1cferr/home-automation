@@ -178,7 +178,9 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
 
 ### Tower fan
 
-- **Product**: Midea VTB180A3, *Ventilador de Torre Smart Air Bladeless*, Wi-Fi.
+- **Product**: Midea VTB180A3, *Ventilador de Torre Smart Air Bladeless*, Wi-Fi. Paired
+  with Midea's *SmartHome (MSmartHome)* app (`com.midea.ai.overseas`), whose account is
+  the one the integration signs in with.
 - **Evidence**: no mDNS service and no SSDP response. The router's DHCP leases list a client
   with the hostname `midea_fa_1188` and a MAC prefix the IEEE registry assigns to *GD Midea
   Air-Conditioning Equipment Co., Ltd.*; `fa` is Midea's appliance type code for fans. TCP
@@ -214,4 +216,4 @@ Common paths once the vendor app is known:
 | Tasmota / ESPHome firmware | Tasmota (needs MQTT) / ESPHome                                                     | Local   |
 | Amazon Alexa app           | [Alexa Devices](https://www.home-assistant.io/integrations/alexa_devices/)         | Cloud   |
 | Smart Banho (Zagonel)      | None in core; community only (see the shower above)                                | Cloud   |
-| Midea (MSmartHome)         | [Midea](https://www.home-assistant.io/integrations/midea/) (V3: cloud key once)    | Local   |
+| SmartHome (MSmartHome)     | [Midea](https://www.home-assistant.io/integrations/midea/) (V3: cloud key once)    | Local   |

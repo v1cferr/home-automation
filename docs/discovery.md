@@ -173,6 +173,14 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
 - **Status**: *integrated* (read-only) since 2026-11-12. The config entry was created
   through the REST config flow API, and the shower's 13 sensors (last shower and monthly
   totals) report data.
+- **Use (2026-11-13)**: the Energy dashboard lists the shower as an individual device for
+  both energy and water, fed by the monthly sensors, which already carry `state_class: total`
+  and a `last_reset` at the start of the month (UTC). The per-shower sensors are not used
+  there: they are `total` without a reset, so each new shower would read as a delta from
+  the previous one. `packages/shower.yaml` adds a notification when a shower goes over
+  15 min or BRL 2.00 (both adjustable helpers) and a monthly summary on the month's last
+  evening. Notifications go to the UI's notification panel until a phone runs the
+  companion app.
 - **Safety**: a high-power heating appliance. No command of any kind is sent to it during
   discovery, and any future integration starts read-only.
 

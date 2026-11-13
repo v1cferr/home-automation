@@ -208,7 +208,18 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
   is set, as on the appliances that work. Next: the owner's SmartHome account, entered in
   the UI with the *MSmartHome* server selected. An account created through Google sign-in
   needs a password set in the app first, as with the shower.
-- **Status**: *candidate*. The router reserves its address.
+- **Status**: *integrated* (local control) since 2026-11-13. The owner's SmartHome account
+  fetched the V3 key, and the config entry loads with one fan entity (on/off, 3 speeds,
+  oscillation, 12 preset modes), three selects for oscillation mode and angles, and a child
+  lock switch. A round trip through the API (speed 1, then back to the *smart* preset)
+  returned `200` and the device reported the new speed on its next poll. The router
+  reserves its address.
+- **Known quirks**: in the *smart* preset the device reports a raw speed of `10`, which the
+  integration divides by the 3 speeds it assumes (correctly, per Midea's product page) and
+  shows as 333 %. The core integration has no option to change that count. After the speed
+  was set by hand, the preset still read *smart*, so the preset attribute may not reflect
+  manual speed changes. The product page lists no oscillation or tilt, so the
+  oscillation selects may do nothing on this model.
 
 ## Choosing an integration
 

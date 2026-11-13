@@ -3,6 +3,7 @@
 # secrets are allowlisted back in.
 /homeassistant/*
 !/homeassistant/configuration.yaml
+!/homeassistant/packages/
 
 # Local, untracked notes from network diagnostics (IPs, MACs, hostnames).
 /local/

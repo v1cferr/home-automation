@@ -9,3 +9,8 @@ frontend:
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+
+# Feature files under packages/ (one per device or topic), tracked in git. See
+# docs/architecture.md, "Configuration layout".
+homeassistant:
+  packages: !include_dir_named packages

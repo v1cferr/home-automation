@@ -1,0 +1,82 @@
+# Zagonel shower: alerts and a monthly summary built on the read-only `zagonel` sensors.
+# Nothing here sends a command to the appliance. Rationale: docs/discovery.md, "Smart
+# electric shower".
+#
+# The integration polls the vendor cloud every 10 minutes and only reports a shower after it
+# ends, so every alert fires after the fact, never during the shower.
+
+input_number:
+  # No `initial`: with one, every restart would overwrite the value set in the UI. The
+  # starting values (15 min, BRL 2.00) were set once with input_number.set_value.
+  shower_alert_minutes:
+    name: Shower alert duration
+    min: 5
+    max: 60
+    step: 1
+    unit_of_measurement: min
+    icon: mdi:timer-alert-outline
+  shower_alert_cost:
+    name: Shower alert cost
+    min: 0.5
+    max: 10
+    step: 0.1
+    unit_of_measurement: BRL
+    icon: mdi:cash-alert
+
+automation:
+  - id: shower_long_or_expensive
+    alias: Shower took long or cost much
+    description: >-
+      Notifies when a finished shower went over the duration or cost set in the two
+      input_number helpers.
+    mode: queued
+    triggers:
+      - trigger: state
+        entity_id: sensor.ducali_0_last_shower
+    conditions:
+      # A restart or a cloud error flips the state through unknown/unavailable, which is
+      # not a new shower.
+      - condition: template
+        value_template: >-
+          {{ trigger.from_state is not none
+             and trigger.from_state.state not in ['unknown', 'unavailable']
+             and trigger.to_state.state not in ['unknown', 'unavailable'] }}
+    actions:
+      # The other "last shower" sensors come from the same poll; give them a moment to land.
+      - delay: "00:00:10"
+      - variables:
+          minutes: "{{ (states('sensor.ducali_0_last_shower_duration') | float(0) / 60) | round(1) }}"
+          cost: "{{ states('sensor.ducali_0_last_shower_cost') | float(0) }}"
+          max_minutes: "{{ states('input_number.shower_alert_minutes') | float(15) }}"
+          max_cost: "{{ states('input_number.shower_alert_cost') | float(2) }}"
+      - condition: template
+        value_template: "{{ minutes > max_minutes or cost > max_cost }}"
+      - action: notify.persistent_notification
+        data:
+          title: Long shower
+          message: >-
+            The last shower took {{ minutes }} min and cost BRL {{ '%.2f' | format(cost) }}
+            ({{ states('sensor.ducali_0_last_shower_water') }} L,
+            {{ states('sensor.ducali_0_last_shower_energy') }} kWh).
+            Limits: {{ max_minutes | int }} min, BRL {{ '%.2f' | format(max_cost) }}.
+
+  - id: shower_monthly_summary
+    alias: Shower monthly summary
+    description: >-
+      On the last day of the month, posts the month's totals before the integration's
+      counters reset (they reset at the start of the month in UTC, 21:00 local time).
+    triggers:
+      - trigger: time
+        at: "20:30:00"
+    conditions:
+      - condition: template
+        value_template: "{{ (now() + timedelta(days=1)).day == 1 }}"
+    actions:
+      - action: notify.persistent_notification
+        data:
+          title: "Shower summary: {{ now().strftime('%B %Y') }}"
+          message: >-
+            {{ states('sensor.ducali_0_showers_this_month') }} showers,
+            {{ states('sensor.ducali_0_monthly_water_usage') }} L of water,
+            {{ states('sensor.ducali_0_monthly_energy_usage') | float(0) | round(1) }} kWh,
+            BRL {{ '%.2f' | format(states('sensor.ducali_0_monthly_cost') | float(0)) }}.

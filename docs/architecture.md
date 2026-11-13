@@ -40,8 +40,8 @@ over netlink but cannot manage it without D-Bus and `NET_ADMIN`, and logs errors
 ### Configuration vs. state
 
 The container's `/config` is bind-mounted from `./homeassistant`. The directory is git-ignored
-as a whole and only reviewed files are allowlisted back (`configuration.yaml` today). Ignored
-on purpose:
+as a whole and only reviewed files are allowlisted back (`configuration.yaml` and
+`packages/`). Ignored on purpose:
 
 | Path                                              | Why                                                                          |
 | ------------------------------------------------- | ---------------------------------------------------------------------------- |
@@ -52,9 +52,28 @@ on purpose:
 | `backups/`, `deps/`, `tts/`, `.cloud/`            | Generated or private                                                         |
 | `automations.yaml`, `scripts.yaml`, `scenes.yaml` | UI-edited; they embed device IDs. Revisit when automations exist             |
 
-`configuration.yaml` is the file Home Assistant generated on first start, unchanged. Keep
-`default_config:` in it: it loads `zeroconf`, `ssdp`, `dhcp` and the rest of the discovery
-stack.
+`configuration.yaml` is the file Home Assistant generated on first start, plus one addition.
+Keep `default_config:` in it: it loads `zeroconf`, `ssdp`, `dhcp` and the rest of the
+discovery stack.
+
+### Configuration layout
+
+YAML that this repository owns goes in `packages/`, one file per device or topic, loaded by
+`homeassistant: packages: !include_dir_named packages`. A package groups the helpers and
+automations of one feature and refers to entities only by `entity_id`, never by device ID,
+so it can be public. UI-edited automations stay in the ignored `automations.yaml`.
+
+| Package       | What it holds                                                       |
+| ------------- | ------------------------------------------------------------------- |
+| `shower.yaml` | Long-shower alert with two threshold helpers, and a monthly summary |
+
+Some settings only exist in `.storage/` and cannot be tracked: the Energy dashboard is one
+(the shower is listed there as an individual device for energy and for water). They are
+recorded in the docs instead.
+
+`configuration.yaml` is root-owned on the host, like the rest of what the container writes,
+so edits go through `docker exec homeassistant` or `sudo`. Validate before restarting:
+`POST /api/config/core/check_config`.
 
 ### Reverse proxy
 

@@ -219,7 +219,8 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
   `10`. The integration assumes 3 speeds (`midea-local`'s default for `0xFA`), so speeds 4
   to 10 show above 100 % (10 reads 333 %) and Home Assistant can only set speeds 1 to 3.
   The library accepts a `speed_count` override, but the core integration has no option to
-  pass it. The preset also kept reading *smart* through manual speed changes, so that
+  pass it ([midea-local#1075](https://github.com/midea-lan/midea-local/issues/1075)).
+  The preset also kept reading *smart* through manual speed changes, so that
   attribute does not reflect the real mode. The product page lists no oscillation or tilt,
   so the oscillation selects may do nothing on this model.
 

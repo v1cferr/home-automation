@@ -209,17 +209,19 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
   the UI with the *MSmartHome* server selected. An account created through Google sign-in
   needs a password set in the app first, as with the shower.
 - **Status**: *integrated* (local control) since 2026-11-13. The owner's SmartHome account
-  fetched the V3 key, and the config entry loads with one fan entity (on/off, 3 speeds,
+  fetched the V3 key, and the config entry loads with one fan entity (on/off, speed,
   oscillation, 12 preset modes), three selects for oscillation mode and angles, and a child
-  lock switch. A round trip through the API (speed 1, then back to the *smart* preset)
-  returned `200` and the device reported the new speed on its next poll. The router
-  reserves its address.
-- **Known quirks**: in the *smart* preset the device reports a raw speed of `10`, which the
-  integration divides by the 3 speeds it assumes (correctly, per Midea's product page) and
-  shows as 333 %. The core integration has no option to change that count. After the speed
-  was set by hand, the preset still read *smart*, so the preset attribute may not reflect
-  manual speed changes. The product page lists no oscillation or tilt, so the
-  oscillation selects may do nothing on this model.
+  lock switch. Setting speed 1 through the API worked: the fan changed, and reported it on
+  its next poll. Setting the *smart* preset afterwards returned `200` but left the fan at
+  speed 1, as the owner confirmed at the appliance. The router reserves its address.
+- **Known quirks**: the fan has **10 speeds** on its own panel (Midea's product page says
+  3), and the device reports the panel's number as is: speed 1 read as `1`, speed 10 as
+  `10`. The integration assumes 3 speeds (`midea-local`'s default for `0xFA`), so speeds 4
+  to 10 show above 100 % (10 reads 333 %) and Home Assistant can only set speeds 1 to 3.
+  The library accepts a `speed_count` override, but the core integration has no option to
+  pass it. The preset also kept reading *smart* through manual speed changes, so that
+  attribute does not reflect the real mode. The product page lists no oscillation or tilt,
+  so the oscillation selects may do nothing on this model.
 
 ## Choosing an integration
 

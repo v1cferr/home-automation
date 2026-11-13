@@ -176,6 +176,29 @@ host's Jellyfin answering SSDP, not a home device. Ignore it.
 - **Safety**: a high-power heating appliance. No command of any kind is sent to it during
   discovery, and any future integration starts read-only.
 
+### Tower fan
+
+- **Product**: Midea VTB180A3, *Ventilador de Torre Smart Air Bladeless*, Wi-Fi.
+- **Evidence**: no mDNS service and no SSDP response. The router's DHCP leases list a client
+  with the hostname `midea_fa_1188` and a MAC prefix the IEEE registry assigns to *GD Midea
+  Air-Conditioning Equipment Co., Ltd.*; `fa` is Midea's appliance type code for fans. TCP
+  port 6444, Midea's local control protocol, is open. One standard Midea discovery query
+  (the same one the integration's *search* step sends, read-only) answers with type `0xFA`,
+  model code `560000AG` and **protocol V3**.
+- **Home Assistant discovery**: none yet. The core integration's DHCP matcher is
+  `registered_devices` only, so it rediscovers devices that are already configured and
+  never offers a new one.
+- **Integration path**: the core [Midea](https://www.home-assistant.io/integrations/midea/)
+  integration (present in the installed version, quality scale *gold*, built on
+  `midea-local`), which lists `0xFA` fans with power, speed, oscillation and mode entities.
+  Control is **local polling** over port 6444, but a V3 device only accepts a session after
+  a token and key are fetched from Midea's cloud once, during setup. The config flow offers
+  either the owner's own app account or a shared preset account that `midea-local` ships;
+  the owner's account is preferred, so the appliance is not registered through credentials
+  that strangers also use. Once set up, the cloud is not needed for day-to-day control.
+  No community integration is needed, so none was reviewed.
+- **Status**: *candidate*.
+
 ## Choosing an integration
 
 Prefer, in order: a core integration with local control, a core integration with cloud
@@ -191,3 +214,4 @@ Common paths once the vendor app is known:
 | Tasmota / ESPHome firmware | Tasmota (needs MQTT) / ESPHome                                                     | Local   |
 | Amazon Alexa app           | [Alexa Devices](https://www.home-assistant.io/integrations/alexa_devices/)         | Cloud   |
 | Smart Banho (Zagonel)      | None in core; community only (see the shower above)                                | Cloud   |
+| Midea (MSmartHome)         | [Midea](https://www.home-assistant.io/integrations/midea/) (V3: cloud key once)    | Local   |

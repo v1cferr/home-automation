@@ -12,7 +12,7 @@ The full log is also at `homeassistant/home-assistant.log`.
 
 ## Bluetooth errors at startup
 
-```
+```text
 ERROR [habluetooth.manager] Missing required permissions for Bluetooth management ...
 ERROR [habluetooth.scanner] hci0 (...): Failed to force stop scanner
 ```

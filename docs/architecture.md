@@ -7,9 +7,9 @@ One container, `homeassistant`, running the official image
 MQTT, ESPHome, Matter Server and n8n are deliberately left out until a device or an
 automation needs them.
 
-```
+```text
 LAN (single broadcast domain)
- ├── Wi-Fi devices (lamp, shower, Echo, ...)
+ ├── Wi-Fi devices (lamp, shower, fan, Echo, ...)
  └── host ── network_mode: host ── homeassistant :8123
                                      └── ./homeassistant  ->  /config
 ```

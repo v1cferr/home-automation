@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Installs the community Zagonel integration into the running Home Assistant container, at
-# the exact commit that was reviewed (see docs/discovery.md, "Smart electric shower").
+# the exact commit that was reviewed (see docs/devices/zagonel-shower.md).
 #
 # The upstream repository carries no license, so its code is fetched here instead of being
 # vendored into this public repository; it lands in the state directory, outside Git.

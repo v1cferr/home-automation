@@ -1,6 +1,6 @@
 # Zagonel shower: alerts and a monthly summary built on the read-only `zagonel` sensors.
-# Nothing here sends a command to the appliance. Rationale: docs/discovery.md, "Smart
-# electric shower".
+# Nothing here sends a command to the appliance. Rationale:
+# docs/devices/zagonel-shower.md.
 #
 # The integration polls the vendor cloud every 10 minutes and only reports a shower after it
 # ends, so every alert fires after the fact, never during the shower.

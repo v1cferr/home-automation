@@ -68,8 +68,8 @@ discovery stack.
 
 ### Configuration layout
 
-YAML that this repository owns goes in `config/packages/`, one file per device or topic, loaded by
-`homeassistant: packages: !include_dir_named packages`. A package groups the helpers and
+YAML that this repository owns goes in `config/packages/`, one file per device or topic,
+loaded by `homeassistant: packages: !include_dir_named packages`. A package groups the helpers and
 automations of one feature and refers to entities only by `entity_id`, never by device ID,
 so it can be public. UI-edited automations stay in the ignored `automations.yaml`.
 

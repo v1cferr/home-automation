@@ -10,6 +10,7 @@ Requirements: Docker Engine with the Compose plugin, on a Linux host attached to
 LAN as the devices.
 
 ```sh
+cp .env.example .env            # only if the state should not live in /var/lib/home-assistant
 docker compose config --quiet   # validate
 docker compose up -d
 docker compose logs -f homeassistant
@@ -24,13 +25,23 @@ the database cleanly.
 
 ## Layout
 
-| Path                            | What                                             | In Git                    |
-| ------------------------------- | ------------------------------------------------ | ------------------------- |
-| `compose.yaml`                  | The single Home Assistant service                | yes                       |
-| `homeassistant/`                | The container's `/config`: all persistent state  | only `configuration.yaml` |
-| `scripts/discovery-snapshot.sh` | Non-invasive LAN discovery snapshot              | yes                       |
-| `local/`                        | Private diagnostics (addresses, MACs, hostnames) | no                        |
-| `docs/`                         | Architecture, discovery method, troubleshooting  | yes                       |
+```text
+.
+├── compose.yaml            # the single Home Assistant service
+├── .env.example            # HA_STATE_DIR: where runtime state lives on the host
+├── config/                 # reviewed YAML, mounted read-only into /config
+│   ├── configuration.yaml  # bootstrap: default_config and the packages loader
+│   └── packages/           # one file per device or topic
+├── scripts/                # discovery snapshot, pinned community integration install
+├── docs/                   # architecture, discovery method, troubleshooting
+│   └── devices/            # one page per device, with a status index
+└── local/                  # private diagnostics (addresses, MACs); git-ignored
+```
+
+Runtime state (database, `.storage`, logs, backups, `deps`, `custom_components`,
+`secrets.yaml`) is not in this tree: it lives in `HA_STATE_DIR`, by default
+`/var/lib/home-assistant`, owned by root. Why the split:
+[docs/architecture.md](docs/architecture.md), "Configuration vs. state".
 
 ## Documentation
 
@@ -38,6 +49,8 @@ the database cleanly.
   migration to a 24/7 server.
 - [docs/discovery.md](docs/discovery.md): how devices are discovered and how to tell an
   announced service from a configured integration.
+- [docs/devices/](docs/devices/README.md): each device's evidence, integration path and
+  status.
 - [docs/troubleshooting.md](docs/troubleshooting.md): known errors and how to diagnose
   devices that do not show up.
 

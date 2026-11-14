@@ -176,11 +176,11 @@ host's Jellyfin answering SSDP, not a home device. It had been configured by mis
   Zagonel's cloud with the app account's email and password, which Home Assistant keeps in
   its config entry. Reviewed on 2026-11-12 against the criteria below:
 
-  | Repository                                         | Activity                                      | Behavior                                                                  |
-  | -------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------- |
-  | `alexandrepossebom/zagonel-ha`                     | 6 commits, last 2026-09, no license           | Sensors only: one login, then `GET` requests every 10 minutes             |
-  | `cleberdevsoares/homeassistant-zagonel-smartbanho` | 7 commits, created 2026-10, MIT               | Live state and controls over cloud MQTT; publishes to it every 15 s       |
-  | `humbertogontijo/homeassistant-zagonel`            | Idle since 2023-10                            | Rejected: targets a server reported as shut down, open connection issues  |
+  | Repository                                         | Activity                            | Behavior                                                                 |
+  | -------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------ |
+  | `alexandrepossebom/zagonel-ha`                     | 6 commits, last 2026-09, no license | Sensors only: one login, then `GET` requests every 10 minutes            |
+  | `cleberdevsoares/homeassistant-zagonel-smartbanho` | 7 commits, created 2026-10, MIT     | Live state and controls over cloud MQTT; publishes to it every 15 s      |
+  | `humbertogontijo/homeassistant-zagonel`            | Idle since 2023-10                  | Rejected: targets a server reported as shut down, open connection issues |
 
   The first is the one to start with, because its whole code path was read and it never
   writes: it only fetches the shower list and the month's measurements, so it reports each

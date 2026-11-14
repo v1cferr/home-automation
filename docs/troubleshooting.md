@@ -8,7 +8,8 @@ docker compose logs --tail 100 homeassistant
 curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8123/   # 200 or 302 when up
 ```
 
-The full log is also at `homeassistant/home-assistant.log`.
+The full log is also at `$HA_STATE_DIR/home-assistant.log` (root-owned; default
+`/var/lib/home-assistant`).
 
 ## Bluetooth errors at startup
 

@@ -3,7 +3,7 @@
 # the exact commit that was reviewed (see docs/discovery.md, "Smart electric shower").
 #
 # The upstream repository carries no license, so its code is fetched here instead of being
-# vendored into this public repository; homeassistant/custom_components/ stays git-ignored.
+# vendored into this public repository; it lands in the state directory, outside Git.
 # Bumping the pin means reading the upstream diff first: this integration is read-only today
 # and must stay that way for a heating appliance.
 #

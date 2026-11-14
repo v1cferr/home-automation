@@ -48,9 +48,10 @@ previous tag in `compose.yaml`.
 
 ### Configuration vs. state
 
-The container's `/config` is bind-mounted from `./homeassistant`. The directory is git-ignored
-as a whole and only reviewed files are allowlisted back (`configuration.yaml` and
-`packages/`). Ignored on purpose:
+The container's `/config` is bind-mounted from a host directory outside this repository,
+`HA_STATE_DIR` (default `/var/lib/home-assistant`, see `.env.example`). The reviewed YAML in
+`config/` is then mounted read-only over it: `config/configuration.yaml` and
+`config/packages/`. Everything else in `/config` is state, kept out of Git on purpose:
 
 | Path                                              | Why                                                                          |
 | ------------------------------------------------- | ---------------------------------------------------------------------------- |
@@ -67,7 +68,7 @@ discovery stack.
 
 ### Configuration layout
 
-YAML that this repository owns goes in `packages/`, one file per device or topic, loaded by
+YAML that this repository owns goes in `config/packages/`, one file per device or topic, loaded by
 `homeassistant: packages: !include_dir_named packages`. A package groups the helpers and
 automations of one feature and refers to entities only by `entity_id`, never by device ID,
 so it can be public. UI-edited automations stay in the ignored `automations.yaml`.
@@ -80,8 +81,10 @@ Some settings only exist in `.storage/` and cannot be tracked: the Energy dashbo
 (the shower is listed there as an individual device for energy and for water). They are
 recorded in the docs instead.
 
-`configuration.yaml` is root-owned on the host, like the rest of what the container writes,
-so edits go through `docker exec homeassistant` or `sudo`. Validate before restarting:
+The tracked files are owned by the user and edited in the working tree like any other file;
+the container sees them read-only. `configuration.yaml` is a single-file mount, which pins
+its inode: after a `git checkout` or an editor that replaces the file, restart the container,
+which Home Assistant needs to reload YAML anyway. Validate before restarting:
 `POST /api/config/core/check_config`.
 
 ### Reverse proxy
@@ -131,20 +134,22 @@ not needed.
   reverse proxy admits only the LAN and the WireGuard subnet.
 - With host networking, direct access to 8123 depends on the host firewall. On the current
   development host 8123 stays closed, so other devices go through the proxy on 443.
-- The container runs as root (the image requires it), so files under `homeassistant/` are
-  owned by root on the host.
+- The container runs as root (the image requires it), so the state directory is owned by
+  root on the host. The mounts from `config/` are read-only, so the container cannot
+  rewrite tracked files.
 - Discovery listeners (5353/udp, 1900/udp) must be allowed by the host firewall for
   unsolicited announcements to arrive.
 
 ## Migrating to a 24/7 server
 
-State is entirely in `./homeassistant`, so a migration is:
+State is entirely in `HA_STATE_DIR`, so a migration is:
 
 1. On the old host: `docker compose down` (clean database shutdown).
 2. Copy the directory preserving ownership, e.g.
-   `sudo rsync -aHAX homeassistant/ newhost:/srv/home-automation/homeassistant/`.
+   `sudo rsync -aHAX /var/lib/home-assistant/ newhost:/var/lib/home-assistant/`.
    Alternatively create a backup in the UI and restore it during onboarding on the new host.
-3. On the new host: clone this repository, put the state in place, `docker compose up -d`.
+3. On the new host: clone this repository, put the state in place (set `HA_STATE_DIR` in
+   `.env` if it is not the default), `docker compose up -d`.
 
 Requirements for the new host:
 

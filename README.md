@@ -17,7 +17,7 @@ docker compose logs -f homeassistant
 
 Open <http://localhost:8123> and complete the onboarding (create the owner account, set the
 home location). The first start takes about two minutes while Home Assistant installs its
-dependencies into `homeassistant/deps`.
+dependencies into the state directory's `deps/`.
 
 Stop it with `docker compose down`. The `stop_grace_period` gives the recorder time to close
 the database cleanly.
@@ -44,8 +44,8 @@ the database cleanly.
 ## Public repository rules
 
 Never commit private addresses, MAC addresses, SSIDs, device identifiers, tokens or
-passwords. Diagnostics go to `local/`, and secrets stay in `homeassistant/secrets.yaml`
-(ignored).
+passwords. Diagnostics go to `local/`, and secrets stay in `secrets.yaml` inside the state
+directory, outside the repository.
 
 The admin API token is not in this repository either: on the development host it comes from
 the host's sops vault at `/run/secrets/home_assistant_token` (readable by the user only).

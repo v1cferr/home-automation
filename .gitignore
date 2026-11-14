@@ -1,10 +1,6 @@
 # Home Assistant's runtime state lives outside the repository (HA_STATE_DIR, see
 # .env.example); only config/ is mounted into the container from here.
 
-# The old in-repo state directory, kept ignored so a leftover copy (database, .storage,
-# secrets.yaml) can never be staged by accident.
-/homeassistant/
-
 # Local, untracked notes from network diagnostics (IPs, MACs, hostnames).
 /local/
 
